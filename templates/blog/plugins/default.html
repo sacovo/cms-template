@@ -1,0 +1,15 @@
+{% if plugin.title %}
+<h2>{{plugin.title}}</h2>
+{% endif %}
+{% for article in article_list %}
+<article>
+  <header>
+    <a href="{{article.get_absolute_url}}">
+    {{article.title}}
+    </a>
+  </header>
+  <section>
+
+  </section>
+</article>
+{% endfor %}

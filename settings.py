@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,11 +38,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "sekizai",
+    "admin_ordering",
+    'feincms3',
+    'feincms3_sites',
+    "content_editor",
+    "feincms3_meta",
+    "ckeditor",
+    "imagefield",
+    'cms',
+    'blog',
+    'events',
+    'link_collections',
 ]
 
 MIDDLEWARE = [
+    'feincms3_sites.middleware.site_middleware',
+    'feincms3_sites.middleware.default_language_middleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'feincms3.apps.apps_middleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -54,11 +71,12 @@ ROOT_URLCONF = 'urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                'sekizai.context_processors.sekizai',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -143,3 +161,44 @@ EMAIL_HOST_USER = os.environ.get('SMTP_USER', 'user')
 EMAIL_HOST_PASSWORD = os.environ.get('SMTP_PASSWORD', 'pw')
 
 DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL', 'webmaster@localhost')
+
+EVENT_TEMPLATE_CHOICES = (
+    ('events/plugins/default.html', _("default")),
+)
+
+BLOG_TEMPLATE_CHOICES = (
+    ('blog/plugins/default.html', _("default")),
+    ('blog/plugins/simple_list.html', _("list")),
+)
+
+LANGUAGES = (
+    ("de", _("German")),
+    ("fr", _("French")),
+    ("it", _("Italian")),
+)
+
+LANGUAGE_CODE = 'de'
+
+# Configure django-ckeditor
+CKEDITOR_CONFIGS = {
+    "default": {
+        "toolbar": "Custom",
+        "format_tags": "h1;h2;h3;p;pre",
+        "toolbar_Custom": [[
+            "Format", "RemoveFormat", "-",
+            "Bold", "Italic", "Subscript", "Superscript", "-",
+            "NumberedList", "BulletedList", "-",
+            "Anchor", "Link", "Unlink", "-",
+            "HorizontalRule", "SpecialChar", "-",
+            "Source",
+        ]],
+    },
+}
+CKEDITOR_CONFIGS["richtext-plugin"] = CKEDITOR_CONFIGS["default"]
+
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }

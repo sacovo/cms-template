@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load feincms3 %}
+
+{% block content %}
+{% for article in article_list %}
+<a href="{{article.get_absolute_url}}">
+  {{article.title}}
+</a>
+{% endfor %}
+{% endblock %}
